@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Rays</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url('ytt.jpg');  /* Ganti dengan path gambar kamu */
+            background-size: contain; /* Agar gambar menutupi seluruh halaman */
+            background-position: center; /* Posisikan gambar di tengah */
+            background-attachment: fixed; /* Agar gambar tetap saat scroll */
+            color: white;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .lyrics {
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1.8;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .word {
+            display: inline-block;
+            position: relative;
+            opacity: 0;
+            transform: translateX(-100%);
+            animation: slideIn 1.5s ease-out forwards;
+            margin-right: 15px;
+            color: white;
+        }
+
+        .word.fade-color {
+            color: red;
+        }
+
+        @keyframes slideIn {
+            0% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            80% {
+                transform: translateX(10px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        footer {
+            font-size: 14px;
+            color: #fff;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #ff6347;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #e5533d;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Audio dengan kontrol manual -->
+<audio id="background-music" loop>
+    <source src="lexs.mp3" type="audio/mp3"> <!-- Pastikan path dan format audio benar -->
+</audio>
+
+<div class="container">
+    <h1>buat pudan ???</h1>
+    <div class="lyrics" id="lyrics"></div>
+
+    <!-- Tombol Play untuk memulai audio -->
+    <button onclick="playAudio()" id="play-button">Play Music</button>
+</div>
+
+<footer>
+    &copy; 2024 Lirik Lagu - Semua hak cipta dilindungi undang-undang
+</footer>
+
+<script>
+    const lyrics = [
+        "And darling I will be loving you 'til we're 70",
+        "And baby my heart could still fall as hard at 23",
+        "And I'm thinking 'bout how people fall in love in mysterious ways",
+        "Maybe just the touch of a hand",
+        "Oh me I fall in love with you every single day",
+        "And I just wanna tell you I am"
+    ];
+
+    const container = document.getElementById('lyrics');
+    let index = 0;
+    const audio = document.getElementById('background-music');
+    const playButton = document.getElementById('play-button');
+
+    function playAudio() {
+        // Sembunyikan tombol play setelah diputar
+        playButton.classList.add('hidden');
+        audio.play();  // Memulai pemutaran audio
+        setTimeout(displayLyrics, 1000);  // Menambahkan jeda 1 detik sebelum menampilkan lirik
+    }
+
+    function stopAudio() {
+        audio.pause();  // Menghentikan pemutaran audio
+        audio.currentTime = 0;  // Mengatur waktu audio kembali ke awal
+        playButton.classList.remove('hidden');  // Tampilkan tombol play kembali
+    }
+
+    function displayLyrics() {
+        if (index < lyrics.length) {
+            const line = lyrics[index];
+            const words = line.split(' ');  // Memecah setiap baris ke dalam kata
+
+            words.forEach((word, i) => {
+                const wordElement = document.createElement('span');
+                wordElement.textContent = word + ' '; // Tambahkan spasi antar kata
+                wordElement.classList.add('word');
+                container.appendChild(wordElement);
+
+                // Set delay untuk setiap kata agar lebih dinamis, sesuai tempo lagu
+                wordElement.style.animationDelay = `${i * 0.5}s`; // Menyesuaikan tempo dengan jeda 0.6 detik per kata
+
+                // Setelah animasi selesai, beri warna merah
+                setTimeout(() => {
+                    wordElement.classList.add('fade-color');
+                }, (i * 0.5 + 1) * 1000); // Menyesuaikan delay warna merah
+            });
+
+            container.appendChild(document.createElement('br')); // Tambahkan baris baru setelah setiap kalimat
+            index++;
+
+            // Menambahkan jeda setelah lirik tertentu
+            if (line === "And darling I will be loving you 'til we're 70") {
+                setTimeout(displayLyrics, (words.length * 0.5) * 1000 + 7000); // Jeda 7 detik setelah lirik pertama sebelum lanjut
+            } else if (line === "And baby my heart could still fall as hard at 23") {
+                setTimeout(displayLyrics, (words.length * 0.5) * 1000 + 5000); // Jeda 5 detik setelah lirik kedua sebelum lanjut
+            } else if (line === "And I'm thinking 'bout how people fall in love in mysterious ways") {
+                setTimeout(displayLyrics, (words.length * 0.5) * 1000 + 3000); // Jeda 3 detik setelah lirik ketiga sebelum lanjut
+            } else if (line === "Maybe just the touch of a hand") {
+                setTimeout(displayLyrics, (words.length * 0.5) * 1000 + 2000); // Jeda 2 detik setelah lirik ini sebelum lanjut
+            } else if (line === "Oh me I fall in love with you every single day") {
+                setTimeout(displayLyrics, (words.length * 0.5) * 1000 + 2000); // Jeda 2 detik setelah lirik ini sebelum lanjut
+            } else {
+                setTimeout(displayLyrics, (words.length * 0.5) * 1000); // Jeda antar baris
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
